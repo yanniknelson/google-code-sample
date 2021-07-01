@@ -16,6 +16,8 @@ class Video {
   Video(std::string&& title, std::string&& videoId,
         std::vector<std::string>&& tags);
 
+  bool operator==(const Video& a) { return mVideoId.compare(a.getVideoId()); }
+
   // Returns the title of the video.
   const std::string& getTitle() const;
 

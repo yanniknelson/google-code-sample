@@ -44,9 +44,69 @@ std::vector<Video> VideoLibrary::getVideos() const {
 const Video* VideoLibrary::getVideo(const std::string& videoId) const {
   const auto found = mVideos.find(videoId);
   if (found == mVideos.end()) {
-    std::cout << "Video not found in video library" << std::endl;
+    // std::cout << "Video not found in video library" << std::endl;
     return nullptr;
   } else {
     return &(found->second);
   }
+}
+
+std::vector<VideoPlaylist> VideoLibrary::getPlaylists() {
+  std::vector<VideoPlaylist> result;
+  for (const auto &playlist : mPlaylists) {
+    result.emplace_back(playlist.second);
+  }
+  return result;
+}
+
+VideoPlaylist *VideoLibrary::getPlaylist(const std::string &playlistId) {
+  auto found = mPlaylists.find(stringToUpper(playlistId));
+  if (found == mPlaylists.end()) {
+    // std::cout << "Video not found in video library" << std::endl;
+    return nullptr;
+  } else {
+    return &(found->second);
+  }
+}
+
+VideoPlaylist *VideoLibrary::createPlaylist(const std::string &playlistId) {
+  if (getPlaylist(playlistId)) {
+    return nullptr;
+  } else {
+    VideoPlaylist playlist = VideoPlaylist(playlistId);
+    mPlaylists.emplace(std::piecewise_construct,
+                       std::forward_as_tuple(stringToUpper(playlistId)),
+                       std::forward_as_tuple(playlistId));
+    return getPlaylist(stringToUpper(playlistId));
+  }
+}
+
+void VideoLibrary::deletePlaylist(VideoPlaylist playlist) {
+  mPlaylists.erase(playlist.getPlaylistId());
+}
+
+const std::string *VideoLibrary::getFlag(const std::string &videoId) {
+  auto found = mFlags.find(videoId);
+  if (found == mFlags.end()) {
+    return nullptr;
+  } else {
+    return &(found->second);
+  }
+}
+
+void VideoLibrary::addFlag(const std::string &videoId,
+                           const std::string &reason) {
+  mFlags.emplace(videoId, reason);
+}
+
+void VideoLibrary::deleteFlag(const std::string &videoId) {
+  mFlags.erase(videoId);
+}
+
+std::vector<std::string> VideoLibrary::getFlaggedVideoIds() {
+  std::vector<std::string> result;
+  for (const auto &flag : mFlags) {
+    result.emplace_back(flag.first);
+  }
+  return result;
 }

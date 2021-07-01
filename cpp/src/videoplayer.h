@@ -1,5 +1,9 @@
 #pragma once
 
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
+#include <regex>
 #include <string>
 
 #include "videolibrary.h"
@@ -10,8 +14,10 @@
 class VideoPlayer {
  private:
   VideoLibrary mVideoLibrary;
+  const Video* CurrentlyPlaying = nullptr;
+  bool playing = false;
 
- public:
+  public:
   VideoPlayer() = default;
 
   // This class is not copyable to avoid expensive copies.
@@ -21,6 +27,8 @@ class VideoPlayer {
   // This class is movable.
   VideoPlayer(VideoPlayer&&) = default;
   VideoPlayer& operator=(VideoPlayer&&) = default;
+
+  std::string VideoToString(const Video video);
 
   void numberOfVideos();
   void showAllVideos();
@@ -42,4 +50,5 @@ class VideoPlayer {
   void flagVideo(const std::string& videoId);
   void flagVideo(const std::string& videoId, const std::string& reason);
   void allowVideo(const std::string& videoId);
+  
 };
